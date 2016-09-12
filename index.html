@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>The Hamming Machine</title>
+<title>Latent variable models, deep generative models and the Hamming Machine</title>
 <meta name="author" content="(Tammo Rukat)"/>
 
 <link rel="stylesheet" href="./org_reveal_presentation/css/reveal.css"/>
@@ -25,7 +25,7 @@
 <div class="reveal">
 <div class="slides">
 <section id="sec-title-slide">
-<h1>The Hamming Machine</h1>
+<h1>Latent variable models, deep generative models and the Hamming Machine</h1>
 <h2>Tammo Rukat</h2>
 <h2>September 7, 2016</h2>
 </section>
@@ -34,16 +34,9 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#/slide-sec-1">Introducing the Hamming Machine</a></li>
-<li><a href="#/slide-sec-2">Synthetic example: Calculator digits</a></li>
-<li><a href="#/slide-sec-3">The multi-layer Hamming Machine</a></li>
-<li><a href="#/slide-sec-4">Inference and learning</a></li>
-<li><a href="#/slide-sec-5">Priors</a></li>
-<li><a href="#/slide-sec-6">Cancer mutational landscapes</a></li>
-<li><a href="#/slide-sec-7">The sparse Hamming Machine</a></li>
-<li><a href="#/slide-sec-8">Future work</a></li>
-<li><a href="#/slide-sec-9">Appendix A: MLE of Lambda</a></li>
-<li><a href="#/slide-sec-10">Appendix B: Further example &#x2013; MNIST</a></li>
+<li><a href="#/slide-sec-1">Latent variable models</a></li>
+<li><a href="#/slide-sec-2">Deep models</a></li>
+<li><a href="#/slide-sec-3">The Hamming Machine</a></li>
 </ul>
 </div>
 </div>
@@ -51,10 +44,336 @@
 
 <section>
 <section id="slide-sec-1">
-<h2 id="sec-1">Introducing the Hamming Machine</h2>
-</section>
+<h2 id="sec-1">Latent variable models</h2>
+<div class="outline-text-2" id="text-1">
+</div></section>
 <section id="slide-sec-1-1">
-<h3 id="sec-1-1">Notation</h3>
+<h3 id="sec-1-1">What are latent variables?</h3>
+<div class="column" style="float:left; width: 95%">
+<ul>
+<li>Unobserved variables?</li>
+<li>Something like parameters?</li>
+<li>Example: A Gaussian mixture model $$ p(\mathbf{x}_i|\theta) = \prod\limits_{k=1}^{K} \pi_k \mathcal{N}(\mathbf{x}_i|\mu_k,\Sigma_k) $$</li>
+
+</ul>
+</div>
+
+
+<div class="figure">
+<p><img src="figures/EM_final.png" alt="EM_final.png" width="25%" height="20%" />
+</p>
+</div>
+
+
+<div class="column" style="float:left; width: 95%">
+<ul>
+<li>Latent variables:  \(\pi_k\) are local to every data point.</li>
+<li>Parameters \(\mu_k\) and \(\Sigma_k\) act globally.</li>
+
+</ul>
+</div>
+</section>
+<section id="slide-sec-1-2">
+<h3 id="sec-1-2">Why use latent variable models?</h3>
+<ul>
+<li>Purpose
+<ul>
+<li>Visualise data</li>
+<li>Compress data</li>
+<li><i>Understand</i> the data generating process</li>
+<li>Classification</li>
+<li>Feature learning</li>
+
+</ul></li>
+<li>Examples
+<ul>
+<li>Mixture models</li>
+<li>Factor analysis (ICA?)</li>
+<li>Unsupervides neural nets</li>
+<li>Deep generative models (VAE)</li>
+
+</ul></li>
+
+</ul>
+<aside class="notes">
+<p>
+Explain difference between supervised and unsupervised learnign
+</p>
+<ul class="org-ul">
+<li>Two main advantages (Murphy) 
+<ol class="org-ol">
+<li>fewer parameters
+</li>
+<li>learn representatoin
+</li>
+</ol>
+</li>
+</ul>
+
+</aside>
+</section>
+<section id="slide-sec-1-3">
+<h3 id="sec-1-3">Directed graphical models</h3>
+<ul>
+<li data-fragment-index="1" class="fragment appear">Also knwon as: <i>Bayesian networks</i> or <i>causal networks</i></li>
+<li data-fragment-index="2" class="fragment appear">By use of the chain rule of probability any joint probability distribution can be factorised as $$ p(x_{1,\ldots, N}) = p(x_1) p(x_2|x_1) p(x_3|x_2,x_1) \ldots p(x_N|x_{1,\ldots, N-1}) $$</li>
+<li data-fragment-index="3" class="fragment appear">Graphical models represent joint distributions by making conditional independence assumptions.</li>
+
+</ul>
+<span class="fragment (apprear) :frag_idx(4)"><p>
+$$ \text{height} \not\perp \text{vocab} $$
+</p></span>
+<span class="fragment (apprear) :frag_idx(5)"><p>
+$$ \text{height} \perp \text{vocab} | \text{age} $$
+</p></span>
+<span class="fragment (apprear) :frag_idx(6)"><p>
+$$ p(\text{height},\text{age},\text{vocabulary}) = p(\text{height}|\text{age}) p(\text{vocab}|\text{age}) p(\text{age}) $$
+</p></span>
+
+<div class="figure">
+<p><img src="figures/cond_indep.png" alt="cond_indep.png" class="fragment (apprear) :frag_idx(6)" width="20%" height="50%" /> 
+</p>
+</div>
+
+</section>
+<section id="slide-sec-1-4">
+<h3 id="sec-1-4">LVMs as graphical models</h3>
+<aside class="notes">
+<ul class="org-ul">
+<li>What is a vector, matrix etc
+</li>
+<li>First show plate notation of a mixture model -&gt; draw on board!
+</li>
+<li>Explain conditional independence, i.e. what does a graphical model mean
+</li>
+<li>Expert systems, how graphical latent variable models work traditionally. Example from murphy?
+</li>
+</ul>
+
+</aside>
+
+<div class="column" style="float:left; width: 50%">
+<ul>
+<li data-fragment-index="1" class="fragment appear">Notation
+<ul>
+<li>Indices
+<ul>
+<li>\({n = 1\ldots N\; \text{- observations/specimens}}\)</li>
+<li>\({d = 1\ldots D\; \text{- features (pixels, genes,}\ldots)}\)</li>
+<li>\({l = 1\ldots L\; \text{- latent dimensions}}\)</li>
+<li>\({k = 1\ldots K\; \text{- layers}}\)</li>
+
+</ul></li>
+<li>Variables
+<ul>
+<li>\({x_{nd}\; \text{- observations}}\)</li>
+<li>\({u_{ld}\; \text{- parameters (globale variable)}}\)</li>
+<li>\({z_{nl}\; \text{- latent variables (local variables)}}\)</li>
+
+</ul></li>
+
+</ul></li>
+<li data-fragment-index="2" class="fragment appear">Another common example: Principal component analysis $$ p(\mathbf{z}_n) = \mathcal{N}(\mathbf{\mu}_0,\Sigma_0) \\ p(\mathbf{x}_n|\mathbf{z}_n,\theta) = \mathcal{N}(\mathbf{U} \mathbf{z}_n,\sigma^2\mathbf{I}) $$</li>
+
+</ul>
+</div>
+
+<div class="column" style="float:left; width: 45%">
+<ul>
+<li data-fragment-index="3" class="fragment appear">Graphical model <img src="figures/pca_graph.png" alt="pca_graph.png" /></li>
+
+</ul>
+</div>
+</section>
+<section id="slide-sec-1-5">
+<h3 id="sec-1-5">Restrict to a single observation and <i>unroll</i> in L and D</h3>
+
+<div class="figure">
+<p><img src="figures/toy_net.png" alt="toy_net.png" width="30%" height="50%" />
+</p>
+</div>
+
+<p>
+Most <b>neural networks</b> are latent variable models
+</p>
+</section>
+<section id="slide-sec-1-6">
+<h3 id="sec-1-6">Inference in latent variable models</h3>
+<ul>
+<li>We want to choose parameters that maximimse the likelihood of the observed data $$ \mathcal{L}(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n |\theta) = \sum\limits_{n=1}^N \log \left[ \sum\limits_{\mathbf{z}_n} p(\mathbf{x}_n, \mathbf{z}_n|\theta) \right] $$</li>
+<li>The marginal is typically hard to compute</li>
+<li>Ansatz: Compute complete data log likelhood $$ \mathcal{L}_c(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n,\mathbf{z}_n|\theta) $$</li>
+<li>But we are not given the complete dataset \(\{\mathbf{X},\mathbf{Z}\}\), only incomplete data \(\mathbf{X}\).</li>
+<li>What <b>do</b> we know about \(\mathbf{Z}\)? The posterior for given parameters: \(p(\mathbf{Z}|\mathbf{X},\theta)\)</li>
+
+</ul>
+</section>
+<section id="slide-sec-1-7">
+<h3 id="sec-1-7">Expectation Maximisation for a Gaussian mixture model</h3>
+<ul>
+<li>Therefore use the expeceted complete data log likelihood under the posterior distribution of the latent variables for fixed parameters \(\theta_{\text{old}}\) $$ Q(\theta,\theta_{\text{old}}) = \sum\limits_{\mathbf{Z}} p(\mathbf{Z}|\mathbf{X},\theta_{\text{old}}) \log p(\mathbf{X},\mathbf{Z}|\theta) $$
+
+<ol>
+<li>E-Step: Use current parameters \(\theta_{\text{old}}\) to calculate the expected complete data log likelihood \(Q\)</li>
+<li>M-Step: Find new parameters that maximise \(Q\): \(\theta_{\text{new}} = \text{arg max} Q(\theta,\theta_{\text{old}}\)</li>
+
+</ol></li>
+
+</ul>
+
+<div class="figure">
+<p><img src="figures/EM_Clustering_of_Old_Faithful_data.gif" alt="EM_Clustering_of_Old_Faithful_data.gif" width="35%" height="50%" />
+</p>
+</div>
+
+<p>
+Example for Gaussian mixture model: Very similar to K-means algorithm
+</p>
+<aside class="notes">
+<ul class="org-ul">
+<li>Discuss identifiability
+</li>
+<li>In general: inference is hard. will only find local modes in most models.
+</li>
+</ul>
+
+</aside>
+
+</section>
+</section>
+<section>
+<section id="slide-sec-2">
+<h2 id="sec-2">Deep models</h2>
+<div class="outline-text-2" id="text-2">
+</div></section>
+<section id="slide-sec-2-1">
+<h3 id="sec-2-1">Deep Learning History</h3>
+<ul>
+<li>Deep learning has a long history under many names:
+<ul>
+<li>cybernetics (1940-60)</li>
+<li>connectonism (1980-90)</li>
+<li>deep learning (since 2006)</li>
+
+</ul></li>
+
+</ul>
+
+<div class="figure">
+<p><img src="figures/waves.png" alt="waves.png" />
+</p>
+</div>
+<ul>
+<li>Deep learning is extremely successfull in supervised learning tasks like image recognition and natural language processing.</li>
+
+</ul>
+</section>
+<section id="slide-sec-2-2">
+<h3 id="sec-2-2">Feed forward neural networks</h3>
+<ul>
+<li>Many layers of nonlinear functions are stacked and applied sequentially to the data. $$ f<sup>(3)</sup>(f<sup>(2)</sup>)f<sup>({1})</sup>(\mathbf{x})))</li>
+<li>These modles are loosley inspired by neuroscince, where each unit resembles a neuron.</li>
+
+</ul>
+
+<div class="figure">
+<p><img src="figures/deep_net.png" alt="deep_net.png" />
+</p>
+</div>
+</section>
+<section id="slide-sec-2-3">
+<h3 id="sec-2-3">Deep Learning: Breakthrough in image classification</h3>
+<ul>
+<li>Breakthrough 2012: Reducing classification error on ImageNet by 50% [Krizhevsky, Sutskever, Hinton, 2012]
+<ul>
+<li>15 million labeled high-resolution images with ~22k categories</li>
+
+</ul></li>
+
+</ul>
+
+<div class="figure">
+<p><img src="figures/dnn.png" alt="dnn.png" />
+</p>
+</div>
+<ul>
+<li>Biomedical applicatoins
+<ul>
+<li>Predict tissue-dependent splicing [Leung et al., 2014]</li>
+<li>Learn quantitative structure activity relationships [Ma et al., 2015]</li>
+<li>Predict binding sites for regulatory Genomics (DeepBind) [Park et al., 2015]</li>
+
+</ul></li>
+
+</ul>
+</section>
+<section id="slide-sec-2-4">
+<h3 id="sec-2-4">Why does deep learning work?</h3>
+<aside class="notes">
+<ul class="org-ul">
+<li>Neural networks are universal approximators.
+</li>
+<li>There exit 2**2**n boolen functions of n variables. For only 260 data points a neural network that implements a generic function in this class requires more bits than particles in the universe.
+</li>
+</ul>
+
+</aside>
+<ul>
+<li>Any smooth function can be approximated by a neural network wiht nonlinear outputs.</li>
+<li>If neurale networks can learn arbirtrary functions, how can they possibly work so well? <i>[Lin and Tegmark, 2016]</i> ?
+<ol>
+<li>The world is described by symmetric, local low-order polynomials.
+<ul>
+<li>Physics: Maxwell, Navier-Stokes, Ising models are described by Hamiltonians of order 2-4</li>
+<li>Statistics: Central limit theorem justifies normal approximation where the Hamiltonian is a 2nd order polynomial</li>
+
+</ul></li>
+<li>The physical world has a hierarchical, Markovian structure.
+<ul>
+<li>E.g. images: pixels -&gt; edges at particular orientations -&gt; motifs of edges -&gt; objects</li>
+
+</ul></li>
+
+</ol></li>
+<li>Key aspect of <i>deep learning</i>: Layers of features are not engineered, but learned from the data.</li>
+
+</ul>
+
+</section>
+<section id="slide-sec-2-5">
+<h3 id="sec-2-5">Diffulties in inference of directed neural networks</h3>
+<ul>
+<li>Explaining away</li>
+
+</ul>
+
+<div class="figure">
+<p><img src="figures/explaining_away.png" alt="explaining_away.png" />
+</p>
+</div>
+<ul>
+<li>Example
+\(x\): Tammo is happy
+\(z_1\): It's sunny outside
+\(z_2\): Paper got accepted</li>
+<li>Given the evidence \(x\), the latent causes \(z_1\) and \(z_2\) are correlated. One is <i>explaining the other away</i>.</li>
+
+</ul>
+</section>
+<section id="slide-sec-2-6">
+<h3 id="sec-2-6">Unsupervised deep learning: Variational autoencoders</h3>
+</section>
+</section>
+<section>
+<section id="slide-sec-3">
+<h2 id="sec-3">The Hamming Machine</h2>
+<div class="outline-text-2" id="text-3">
+</div></section>
+<section id="slide-sec-3-1">
+<h3 id="sec-3-1">Introducing the Hamming Machine</h3>
+</section>
+<section id="slide-sec-3-1-1">
+<h4 id="sec-3-1-1">Notation</h4>
 <ul>
 <li>Indices
 <ul>
@@ -80,8 +399,8 @@ Make clear what variables are as compared to parameters. Only difference here is
 
 </aside>
 </section>
-<section id="slide-sec-1-2">
-<h3 id="sec-1-2">Model derivation</h3>
+<section id="slide-sec-3-1-2">
+<h4 id="sec-3-1-2">Model derivation</h4>
 <ul>
 <li data-fragment-index="1" class="fragment appear">Construct a probability distribution based on the hamming distance between two binary vectors, \({h(\mathbf{x},\mathbf{u})}\), and a dispersion parameter \({\lambda}\): $$ p(\mathbf{x}|\mathbf{u}) \propto \exp\left[ -\lambda \, h(\mathbf{x},\mathbf{u}) \right] $$</li>
 <li data-fragment-index="2" class="fragment appear">Each observations \({\mathbf{x} }\) is generated from a subset of binary <b>codes</b>: \({\mathbf{u}_{l{=}1\ldots L}}\), selected by a vector of binary latent variables \({\mathbf{z}}\) $$ p(\mathbf{x}|\mathbf{U},\mathbf{z},\lambda) \propto \prod\limits_l p(\mathbf{x}|\mathbf{u}_l,\lambda)^{z_l} = \prod\limits_d \exp\left[- \sum_l z_l \lambda h(x_d,u_{ld}) \right]$$</li>
@@ -99,8 +418,8 @@ Make clear what variables are as compared to parameters. Only difference here is
 
 </aside>
 </section>
-<section id="slide-sec-1-3">
-<h3 id="sec-1-3">Graphical model representation</h3>
+<section id="slide-sec-3-1-3">
+<h4 id="sec-3-1-3">Graphical model representation</h4>
 <ul>
 <li>$$ p(\mathbf{x}_{n}|\mathbf{z}_n,\mathbf{U},\lambda) = \prod_d \text{Ber}  \left( x_{nd} |\sigma \left[ \lambda \sum\limits_{l=1}^L z_{ln} \tilde{u}_{ld}  \right] \right)$$</li>
 
@@ -111,27 +430,45 @@ Make clear what variables are as compared to parameters. Only difference here is
 <p><img src="single_layer_network.png" alt="single_layer_network.png" />
 </p>
 </div>
+<aside class="notes">
+<ul class="org-ul">
+<li>This is just a sigmoid belief net, but two differences:
+<ol class="org-ol">
+<li>binary parameters
+</li>
+<li>parameters are random variables
+</li>
+</ol>
+</li>
+</ul>
+
+</aside>
 </section>
-<section id="slide-sec-1-4">
-<h3 id="sec-1-4">Toy example</h3>
+<section id="slide-sec-3-1-4">
+<h4 id="sec-3-1-4">Toy example</h4>
 
 <div class="figure">
 <p><img src="file:///home/tammo/hamming_projects/simulation_studies/toy_tests/train_seed14_method-mmgarch-3/figures/sampler_002.png" alt="sampler_002.png" />
 </p>
 </div>
+<aside class="notes">
+<ul class="org-ul">
+<li>We do essentially random scan Gibbs sampling, as described later
+</li>
+</ul>
+
+</aside>
 </section>
-<section id="slide-sec-1-5">
-<h3 id="sec-1-5">Toy example</h3>
+<section id="slide-sec-3-1-5">
+<h4 id="sec-3-1-5">Toy example</h4>
 
 <div class="figure">
 <p><img src="file:///home/tammo/hamming_projects/simulation_studies/toy_tests/train_seed14_method-mmgarch-3/figures/animation.gif" alt="animation.gif" />
 </p>
 </div>
 </section>
-</section>
-<section>
-<section id="slide-sec-2">
-<h2 id="sec-2">Synthetic example: Calculator digits</h2>
+<section id="slide-sec-3-2">
+<h3 id="sec-3-2">Synthetic example: Calculator digits</h3>
 
 <div class="figure">
 <p><img src="file:///home/tammo/hamming_projects/simulation_studies/figures/calculator/digits.png" alt="digits.png" width="70%" height="50%" />
@@ -142,8 +479,8 @@ Make clear what variables are as compared to parameters. Only difference here is
 
 </ul>
 </section>
-<section id="slide-sec-2-1">
-<h3 id="sec-2-1">Noiseless calculator digits</h3>
+<section id="slide-sec-3-2-1">
+<h4 id="sec-3-2-1">Noiseless calculator digits</h4>
 <div class="column" style="float:left; width: 25%">
 <p>
 <img src="file:///home/tammo/hamming_projects/local_figs/nonsparse_noisefree_data.png" alt="nonsparse_noisefree_data.png" />
@@ -185,8 +522,8 @@ inferred latent variables
 </div>
 
 </section>
-<section id="slide-sec-2-2">
-<h3 id="sec-2-2">Other <i>perfect</i> solutions</h3>
+<section id="slide-sec-3-2-2">
+<h4 id="sec-3-2-2">Other <i>perfect</i> solutions</h4>
 <div class="column" style="float:left; width: 40%">
 
 <div class="figure">
@@ -213,8 +550,8 @@ inferred latent variables
 
 
 </section>
-<section id="slide-sec-2-3">
-<h3 id="sec-2-3">Reconstruction Error</h3>
+<section id="slide-sec-3-2-3">
+<h4 id="sec-3-2-3">Reconstruction Error</h4>
 
 <div class="figure">
 <p><img src="calc_dist.png" alt="calc_dist.png" width="90%" height="20%" />
@@ -222,8 +559,8 @@ inferred latent variables
 </div>
 
 </section>
-<section id="slide-sec-2-4">
-<h3 id="sec-2-4">Denoising</h3>
+<section id="slide-sec-3-2-4">
+<h4 id="sec-3-2-4">Denoising</h4>
 <div class="column" style="float:left; width: 40%">
 <ul>
 <li>Calculator digits with 10% noise.</li>
@@ -258,10 +595,8 @@ Corresponding codes
 </div>
 
 </section>
-</section>
-<section>
-<section id="slide-sec-3">
-<h2 id="sec-3">The multi-layer Hamming Machine</h2>
+<section id="slide-sec-3-3">
+<h3 id="sec-3-3">The multi-layer Hamming Machine</h3>
 
 <div class="figure">
 <p><img src="twolayer_hm.png" alt="twolayer_hm.png" />
@@ -279,22 +614,20 @@ $$  p(\mathbf{Z}^{[0:K]},\mathbf{U}^{[1:K]},\lambda) =
 $$
 </p>
 </section>
-</section>
-<section>
-<section id="slide-sec-4">
-<h2 id="sec-4">Inference and learning</h2>
-<div class="outline-text-2" id="text-4">
+<section id="slide-sec-3-4">
+<h3 id="sec-3-4">Inference and learning</h3>
+<div class="outline-text-3" id="text-3-4">
 </div></section>
-<section id="slide-sec-4-1">
-<h3 id="sec-4-1">Abbrevations</h3>
+<section id="slide-sec-3-4-1">
+<h4 id="sec-3-4-1">Abbrevations</h4>
 <ul>
 <li><i>Observation count matrix</i>: $$ a_{nd} = \tilde{x}_{nd} \sum\limits_{l = 1}^{M} z_{ln} \tilde{u}_{ld} $$ $$ a_{nd} \in \{-L,\ldots,-1,0,1,\ldots,L \} $$</li>
 <li>Enables us to write the likelihood: $$ \mathcal{L}(\mathbf{U},\mathbf{Z},\lambda) = \prod_{n,d} \sigma \left[ \lambda a_{nd} \right] $$</li>
 
 </ul>
 </section>
-<section id="slide-sec-4-2">
-<h3 id="sec-4-2">Random scann Gibbs sampling - conditional</h3>
+<section id="slide-sec-3-4-2">
+<h4 id="sec-3-4-2">Random scann Gibbs sampling - conditional</h4>
 <ul>
 <li>Full conditionals $$  p(u_{ld}=1|\text{rest}) = \sigma \left[-\tilde{u}_{ld} \sum\limits_n \left\{ \gamma_{\lambda}(a_{nd}) - \gamma_{\lambda}(a_{nd} -  \tilde{u}_{ld} \,\tilde{x}_{nd} (\tilde{z}_{nl}+1) )\right\} \right] $$ $$ p(z_{nl}{=}1|\text{rest}) = \sigma\left[ -\tilde{z}_{ln} \sum\limits_d \left\{ \gamma_{\lambda}\left(a_{nd}\right) - \gamma_{\lambda}\left(a_{nd}-\tilde{z}_{ln}\,\tilde{x}_{nd}\,\tilde{u}_{ld}\right) \right\} \right] $$</li>
 <li>Multilayer conditionals $$ p(z^{[k]}_{nl}{=}1) = \sigma\left[-\tilde{z}_{nl} \sum\limits_{d} \left\{ \log \left( 1 + \exp \left[ -\lambda a_{nd} \right] \right)
@@ -312,8 +645,8 @@ $$
 </aside>
 
 </section>
-<section id="slide-sec-4-3">
-<h3 id="sec-4-3">The modified metropolised Gibbs sampler</h3>
+<section id="slide-sec-3-4-3">
+<h4 id="sec-3-4-3">The modified metropolised Gibbs sampler</h4>
 <ul>
 <li data-fragment-index="1" class="fragment appear">Instead of drawing from the full conditional we always propose a value \({y'}\) that is different from the current value \({y}\), i.e. \({y' = 1-y}\).</li>
 <li data-fragment-index="2" class="fragment appear">The proposal distribution then takes the form $$ q(y'|y\neq y') = 1 = \frac{p(y'|\text{rest})}{1-p(y|\text{rest})} $$</li>
@@ -323,43 +656,38 @@ $$
 
 </ul>
 </section>
-<section id="slide-sec-4-4">
-<h3 id="sec-4-4">Alternative sampling schemes</h3>
-<div class="outline-text-3" id="text-4-4">
-</div></section>
-<section id="slide-sec-4-4-1">
-<h4 id="sec-4-4-1">Approaches</h4>
-<ol>
-<li>Forward-filtering backward-sampling for joint updates across layers
+<section id="slide-sec-3-4-4">
+<h4 id="sec-3-4-4">Alternative sampling schemes</h4>
+<div class="outline-text-4" id="text-3-4-4">
+</div><ul class="org-ul"><li><a id="sec-3-4-4-1" name="sec-3-4-4-1"></a>Approaches<br  /><ol>
+<li data-fragment-index="1" class="fragment appear">Forward-filtering backward-sampling for joint updates across layers
 <ul>
 <li>Using coniditional independence properties, like for hidden Markov models.</li>
 
 </ul></li>
-<li>Layer-wise training
+<li data-fragment-index="2" class="fragment appear">Layer-wise training
 <ul>
 <li>Start from the layer closest to the data</li>
 <li>Train until convergence</li>
 <li><i>Turn on</i> layer below</li>
 
 </ul></li>
-<li>Simulated reheating
+<li data-fragment-index="3" class="fragment appear">Simulated reheating
 <ul>
 <li>After convergence, reheat the system by means of the dispersion parameter \(\lambda\).</li>
 <li>Sample at fixed high temperature</li>
 <li>Converge back to equilibrium temperature</li>
 
 </ul></li>
-<li>Parallel tempering
+<li data-fragment-index="4" class="fragment appear">Parallel tempering
 <ul>
 <li>Swapping states between chains is extremely unlikely</li>
 
 </ul></li>
 
 </ol>
-</section>
-<section id="slide-sec-4-4-2">
-<h4 id="sec-4-4-2">Results</h4>
-<div class="column" style="float:left; width: 50%">
+</li>
+<li><a id="sec-3-4-4-2" name="sec-3-4-4-2"></a>Results<br  /><div class="column" style="float:left; width: 50%">
 
 <div class="figure">
 <p><img src="file:///home/tammo/hamming_projects/improve_inference/shared_logs/comparsion_overall.png" alt="comparsion_overall.png" width="65%" height="20%" />
@@ -414,15 +742,14 @@ Data layer \({p(\mathbf{Z}_2|\mathbf{Z}_3,\mathbf{U},\lambda_3)}\)
 </ul>
 
 </aside>
+</li></ul>
 </section>
-</section>
-<section>
-<section id="slide-sec-5">
-<h2 id="sec-5">Priors</h2>
-<div class="outline-text-2" id="text-5">
+<section id="slide-sec-3-5">
+<h3 id="sec-3-5">Bernoulli priors</h3>
+<div class="outline-text-3" id="text-3-5">
 </div></section>
-<section id="slide-sec-5-1">
-<h3 id="sec-5-1">Effect on the conditionals</h3>
+<section id="slide-sec-3-5-1">
+<h4 id="sec-3-5-1">Effect on the conditionals</h4>
 <ul>
 <li>A Bernoulli prior on a single code unit \({u_{ld}}\):</li>
 
@@ -431,8 +758,8 @@ Data layer \({p(\mathbf{Z}_2|\mathbf{Z}_3,\mathbf{U},\lambda_3)}\)
 $$ p(u_{ld}=1|\text{rest}) = \sigma \left[\color{red}{ \log\left(  \frac{ p(u_{ld}) }{ 1 - p(u_{ld}) } \right)} - \tilde{u}_{ld} \sum\limits_n \left\{ \gamma_{\lambda}(a_{nd}) - \gamma_{\lambda}(a_{nd} - \tilde{u}_{ld}\,\tilde{x}_{nd} (\tilde{s}_{mn} + 1))\right\} \right] $$
 </p>
 </section>
-<section id="slide-sec-5-2">
-<h3 id="sec-5-2">Types of priors</h3>
+<section id="slide-sec-3-5-2">
+<h4 id="sec-3-5-2">Types of priors</h4>
 <div class="column" style="float:left; width: 55%">
 <ol>
 <li>Independent Bernoulli prior on every single code unit \({u_{md}}\)</li>
@@ -452,30 +779,28 @@ E.g. <i>step-exp prior</i>
 $$  p(u = 1) = \tfrac{1}{2} \mathrm{H}( 1 - q ) + \tfrac{1}{2} \mathrm{H}(q-1) e^{-a(q-1)} $$
 </p>
 </section>
-<section id="slide-sec-5-3">
-<h3 id="sec-5-3">Effect of the prior for synthetic data - flat prior (old example)</h3>
+<section id="slide-sec-3-5-3">
+<h4 id="sec-3-5-3">Effect of the prior for synthetic data - flat prior (old example)</h4>
 
 <div class="figure">
 <p><img src="figures/a4_10_5.gif" alt="a4_10_5.gif" />
 </p>
 </div>
 </section>
-<section id="slide-sec-5-4">
-<h3 id="sec-5-4">Effect of the prior for synthetic data - step exp sparsity prior</h3>
+<section id="slide-sec-3-5-4">
+<h4 id="sec-3-5-4">Effect of the prior for synthetic data - step exp sparsity prior</h4>
 
 <div class="figure">
 <p><img src="figures/a4_10_5_sparse.gif" alt="a4_10_5_sparse.gif" />
 </p>
 </div>
 </section>
-</section>
-<section>
-<section id="slide-sec-6">
-<h2 id="sec-6">Cancer mutational landscapes</h2>
-<div class="outline-text-2" id="text-6">
+<section id="slide-sec-3-6">
+<h3 id="sec-3-6">Application: Cancer mutational landscapes</h3>
+<div class="outline-text-3" id="text-3-6">
 </div></section>
-<section id="slide-sec-6-1">
-<h3 id="sec-6-1">TCGA data</h3>
+<section id="slide-sec-3-6-1">
+<h4 id="sec-3-6-1">TCGA data</h4>
 <p>
 127 specific cancer-associated genes are taken into account with specimens from four primary tissues
 </p>
@@ -487,8 +812,8 @@ $$  p(u = 1) = \tfrac{1}{2} \mathrm{H}( 1 - q ) + \tfrac{1}{2} \mathrm{H}(q-1) e
 
 </ul>
 </section>
-<section id="slide-sec-6-2">
-<h3 id="sec-6-2">Reference model: binary PCA</h3>
+<section id="slide-sec-3-6-2">
+<h4 id="sec-3-6-2">Reference model: binary PCA</h4>
 <p>
 $$ p(\mathbf{z}_{n}) = \mathcal{N}(0,\sigma^2\,\mathbb{I}) $$
 $$ p(x_{nd}=1|\mathbf{z}_n,\theta) = \sigma\left[ \tilde{\mathbf{u}}^T_d \mathbf{z}_n \right] $$
@@ -496,77 +821,41 @@ $$ u_{ld}, z_{nl} \in \mathbb{R} $$
 </p>
 <div class="column" style="float:left; width: 50%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/pca_2d_z_scatter_0.png" alt="pca_2d_z_scatter_0.png" />
+<img src="./figures/pca_2d_z_scatter_0.png" alt="pca_2d_z_scatter_0.png" />
 Latent embedding
 </p>
 </div>
 
 <div class="column" style="float:left; width: 50%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/pca_2d_u_scatter_0_zoomed.png" alt="pca_2d_u_scatter_0_zoomed.png" />
+<img src="./figures/pca_2d_u_scatter_0_zoomed.png" alt="pca_2d_u_scatter_0_zoomed.png" />
 Principal components
 </p>
 </div>
 </section>
-<section id="slide-sec-6-3">
-<h3 id="sec-6-3">Second hidden layer</h3>
-<div class="column" style="float:left; width: 72%">
-
-<div class="column" style="float:left; width: 25%">
-
-<div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm0_0.png" alt="latent_hm0_0.png" width="100%" height="20%" />
-</p>
-</div>
-</div>
-
-<div class="column" style="float:left; width: 25%">
-
-<div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm2_0.png" alt="latent_hm2_0.png" width="100%" height="20%" />
-</p>
-</div>
-</div>
-
-<div class="column" style="float:left; width: 25%">
-
-<div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm1_0.png" alt="latent_hm1_0.png" width="100%" height="20%" />
-</p>
-</div>
-</div>
-
-<div class="column" style="float:left; width: 25%">
-
-<div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm3_0.png" alt="latent_hm3_0.png" width="100%" height="20%" />
-</p>
-</div>
-</div>
-
-<ul class="fragment appear">
-<li>PTEN and PIK3 affect the cell-cycle regulating PIK3/AKT/mTOR pathway.</li>
-<li>FLT3 is involved in regulation of hematopoiesis.</li>
+<section id="slide-sec-3-6-3">
+<h4 id="sec-3-6-3">Two-layer Hamming Machine</h4>
+<ul>
+<li>L = [15,4]</li>
+<li>The data 95% zeros</li>
 
 </ul>
-</div>
+<aside class="notes">
+<ul class="org-ul">
+<li>Architecture is [15,4]
+</li>
+</ul>
 
-<div class="column" style="float:left; width: 28%">
-
-<div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/snas_1.png" alt="snas_1.png" width="75%" height="20%" />
-</p>
-</div>
-</div>
+</aside>
 </section>
-<section id="slide-sec-6-4">
-<h3 id="sec-6-4">First hidden layer</h3>
+<section id="slide-sec-3-6-4">
+<h4 id="sec-3-6-4">Two-layer Hamming Machine &#x2013; first hidden layer</h4>
 <div class="column" style="float:left; width: 70%">
 
 <div class="column" style="float:left; width: 22%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm0.png" alt="latent_hm0.png" width="100%" height="20%" />
+<p><img src="./figures/latent_hm0.png" alt="latent_hm0.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
@@ -574,7 +863,7 @@ Principal components
 <div class="column" style="float:left; width: 22%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm2.png" alt="latent_hm2.png" width="100%" height="20%" />
+<p><img src="./figures/latent_hm2.png" alt="latent_hm2.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
@@ -582,7 +871,7 @@ Principal components
 <div class="column" style="float:left; width: 22%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm1.png" alt="latent_hm1.png" width="100%" height="20%" />
+<p><img src="./figures/latent_hm1.png" alt="latent_hm1.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
@@ -590,7 +879,7 @@ Principal components
 <div class="column" style="float:left; width: 22%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/latent_hm3.png" alt="latent_hm3.png" width="100%" height="20%" />
+<p><img src="./figures/latent_hm3.png" alt="latent_hm3.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
@@ -606,26 +895,75 @@ Principal components
 <div class="column" style="float:left; width: 28%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/snas_0.png" alt="snas_0.png" width="65%" height="20%" />
+<p><img src="./figures/snas_0.png" alt="snas_0.png" width="65%" height="20%" />
 </p>
 </div>
 </div>
 </section>
-<section id="slide-sec-6-5">
-<h3 id="sec-6-5">PCA</h3>
-<div class="column" style="float:left; width: 50%">
+<section id="slide-sec-3-6-5">
+<h4 id="sec-3-6-5">Two-layer Hamming Machine &#x2013; second hidden layer</h4>
+<div class="column" style="float:left; width: 72%">
+
+<div class="column" style="float:left; width: 25%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/pca_0.png" alt="pca_0.png" />
+<p><img src="./figures/latent_hm0_0.png" alt="latent_hm0_0.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
-<div class="column" style="float:left; width: 50%">
+
+<div class="column" style="float:left; width: 25%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/pca_1.png" alt="pca_1.png" />
+<p><img src="./figures/latent_hm2_0.png" alt="latent_hm2_0.png" width="100%" height="20%" />
 </p>
 </div>
+</div>
+
+<div class="column" style="float:left; width: 25%">
+
+<div class="figure">
+<p><img src="./figures/latent_hm1_0.png" alt="latent_hm1_0.png" width="100%" height="20%" />
+</p>
+</div>
+</div>
+
+<div class="column" style="float:left; width: 25%">
+
+<div class="figure">
+<p><img src="./figures/latent_hm3_0.png" alt="latent_hm3_0.png" width="100%" height="20%" />
+</p>
+</div>
+</div>
+
+<ul class="fragment appear">
+<li>PTEN and PIK3 affect the cell-cycle regulating PIK3/AKT/mTOR pathway.</li>
+<li>FLT3 is involved in regulation of hematopoiesis.</li>
+
+</ul>
+</div>
+
+<div class="column" style="float:left; width: 28%">
+
+<div class="figure">
+<p><img src="./figures/snas_1.png" alt="snas_1.png" width="75%" height="20%" />
+</p>
+</div>
+</div>
+</section>
+<section id="slide-sec-3-6-6">
+<h4 id="sec-3-6-6">PCA</h4>
+<div class="column" style="float:left; width: 50%">
+<p>
+<i>,/figures/pca_0.png</i>
+First hidden layer (L=15)
+</p>
+</div>
+<div class="column" style="float:left; width: 50%">
+<p>
+<img src="./figures/pca_1.png" alt="pca_1.png" />
+Second hidden layer (L=4)
+</p>
 </div>
 <aside class="notes">
 <ul class="org-ul">
@@ -635,31 +973,29 @@ Principal components
 
 </aside>
 </section>
-<section id="slide-sec-6-6">
-<h3 id="sec-6-6">tSNE</h3>
+<section id="slide-sec-3-6-7">
+<h4 id="sec-3-6-7">tSNE</h4>
 <div class="column" style="float:left; width: 50%">
-
-<div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/tsne_0.png" alt="tsne_0.png" width="130%" height="100%" />
+<p>
+<img src="./figures/tsne_0.png" alt="tsne_0.png" width="130%" height="100%" />
+First hidden layer (L=15)
 </p>
 </div>
-</div>
 <div class="column" style="float:left; width: 50%">
-
-<div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/tsne_1.png" alt="tsne_1.png" width="130%" height="1000%" />
+<p>
+<img src="./figures/tsne_1.png" alt="tsne_1.png" width="130%" height="1000%" />
+Second hidden layer (L=4)
 </p>
-</div>
 </div>
 </section>
-<section id="slide-sec-6-7">
-<h3 id="sec-6-7">Single layer HM</h3>
+<section id="slide-sec-3-6-8">
+<h4 id="sec-3-6-8">Single layer HM</h4>
 <div class="column" style="float:left; width: 72%">
 
 <div class="column" style="float:left; width: 25%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/single_layer0.png" alt="single_layer0.png" width="100%" height="20%" />
+<p><img src="./figures/single_layer0.png" alt="single_layer0.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
@@ -667,7 +1003,7 @@ Principal components
 <div class="column" style="float:left; width: 25%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/single_layer1.png" alt="single_layer1.png" width="100%" height="20%" />
+<p><img src="./figures/single_layer1.png" alt="single_layer1.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
@@ -675,7 +1011,7 @@ Principal components
 <div class="column" style="float:left; width: 25%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/single_layer2.png" alt="single_layer2.png" width="100%" height="20%" />
+<p><img src="./figures/single_layer2.png" alt="single_layer2.png" width="100%" height="20%" />
 </p>
 </div>
 </div>
@@ -692,19 +1028,17 @@ Principal components
 <div class="column" style="float:left; width: 28%">
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/gabor/pancan/snas_single.png" alt="snas_single.png" width="75%" height="20%" />
+<p><img src="./figures/snas_single.png" alt="snas_single.png" width="75%" height="20%" />
 </p>
 </div>
 </div>
 </section>
-</section>
-<section>
-<section id="slide-sec-7">
-<h2 id="sec-7">The sparse Hamming Machine</h2>
-<div class="outline-text-2" id="text-7">
+<section id="slide-sec-3-7">
+<h3 id="sec-3-7">Model modification: The sparse Hamming Machine</h3>
+<div class="outline-text-3" id="text-3-7">
 </div></section>
-<section id="slide-sec-7-1">
-<h3 id="sec-7-1">Motivation</h3>
+<section id="slide-sec-3-7-1">
+<h4 id="sec-3-7-1">Motivation</h4>
 <ul>
 <li>The <i>problem</i>: Every code has to vote on every feature. If a code believes that certain features appear together, than it necessarily provides the same evidence for all other features to no appear.</li>
 <li>This may not reflect the generative process that we wish to capture.</li>
@@ -714,32 +1048,32 @@ Principal components
 
 </ul>
 </section>
-<section id="slide-sec-7-2">
-<h3 id="sec-7-2">Synthetic example</h3>
+<section id="slide-sec-3-7-2">
+<h4 id="sec-3-7-2">Synthetic example</h4>
 <div class="column" style="float:left; width: 25%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/gabor/sparse_Hm/nonsparse_noisy_newdata.png" alt="nonsparse_noisy_newdata.png" />
+<img src="./figures/nonsparse_noisy_newdata.png" alt="nonsparse_noisy_newdata.png" />
 compressed data
 </p>
 </div>
 
 <div class="column" style="float:left; width: 25%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/gabor/sparse_Hm/calc_digits_codesviva.png" alt="calc_digits_codesviva.png" />
+<i>,/figures/calc_digits_codesviva.png</i>
 inferred codes
 </p>
 </div>
 
 <div class="column" style="float:left; width: 25%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/gabor/sparse_Hm/calc_digits_sparse_codes_reconviva.png" alt="calc_digits_sparse_codes_reconviva.png" />
+<img src="./figures/calc_digits_sparse_codes_reconviva.png" alt="calc_digits_sparse_codes_reconviva.png" />
 reconstruction of codes
 </p>
 </div>
 
 <div class="column" style="float:left; width: 25%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/gabor/sparse_Hm/nonsparse_noisy_newZ0.png" alt="nonsparse_noisy_newZ0.png" />
+<img src="./figures/nonsparse_noisy_newZ0.png" alt="nonsparse_noisy_newZ0.png" />
 latent variables
 </p>
 
@@ -747,14 +1081,14 @@ latent variables
 
 <div class="column" style="float:left; width: 20%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/gabor/sparse_Hm/calc_digits_sparse_codes_reconviva_3.png" alt="calc_digits_sparse_codes_reconviva_3.png" />
+<img src="./figures/calc_digits_sparse_codes_reconviva_3.png" alt="calc_digits_sparse_codes_reconviva_3.png" />
 codes for \({L{=}3}\)
 </p>
 </div>
 
 <div class="column" style="float:left; width: 20%">
 <p>
-<img src="file:///home/tammo/hamming_projects/local_figs/rgb_simplex.png" alt="rgb_simplex.png" />
+<img src="./figures/rgb_simplex.png" alt="rgb_simplex.png" />
 color legend
 </p>
 </div>
@@ -769,25 +1103,23 @@ color legend
 </div>
 
 </section>
-<section id="slide-sec-7-3">
-<h3 id="sec-7-3">Reconstruction error</h3>
+<section id="slide-sec-3-7-3">
+<h4 id="sec-3-7-3">Reconstruction error</h4>
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/blackgoose/distr.png" alt="distr.png" width="80%" height="50%" />
+<p><img src="figures/distr.png" alt="distr.png" width="80%" height="50%" />
 </p>
 </div>
 </section>
-</section>
-<section>
-<section id="slide-sec-8">
-<h2 id="sec-8">Future work</h2>
-<div class="outline-text-2" id="text-8">
+<section id="slide-sec-3-8">
+<h3 id="sec-3-8">Future work</h3>
+<div class="outline-text-3" id="text-3-8">
 </div></section>
-<section id="slide-sec-8-1">
-<h3 id="sec-8-1">The minimal Hamming Machine</h3>
+<section id="slide-sec-3-8-1">
+<h4 id="sec-3-8-1">The minimal Hamming Machine</h4>
 <ul>
-<li>A very intuitive way of combining codes to generate observations. $$  p(x_{nd}=1|\mathbf{u}_d,\mathbf{z}_n) \propto \exp\left[{\lambda\, h(x,\min(\mathbf{u}^T\mathbf{z},1))} \right] $$</li>
-<li>The binomial parameter for node \(x_{nd}\) takes one of only 2 possible values, \({\sigma(\pm \lambda)}\).
+<li data-fragment-index="1" class="fragment appear">A very intuitive way of combining codes to generate observations. $$  p(x_{nd}=1|\mathbf{u}_d,\mathbf{z}_n) \propto \exp\left[{\lambda\, h(x,\min(\mathbf{u}^T\mathbf{z},1))} \right] $$</li>
+<li data-fragment-index="2" class="fragment appear">The binomial parameter for node \(x_{nd}\) takes one of only 2 possible values, \({\sigma(\pm \lambda)}\).
 <ul>
 <li>It equals \({\sigma(+\lambda)}\) if a single pair of its parent variables is <i>turned on</i>, \((z_{nl},u_{ld}) = (1,1)\), indepedent of the value of all other parents.</li>
 <li>It equald \({-\lambda}\) if all parents are <i>turned off</i>.</li>
@@ -796,17 +1128,18 @@ color legend
 
 </ul>
 </section>
-<section id="slide-sec-8-2">
-<h3 id="sec-8-2">Scalable inference with mean field fixed point equations</h3>
+<section id="slide-sec-3-8-2">
+<h4 id="sec-3-8-2">Scalable inference with mean field fixed point equations</h4>
 <ul>
-<li>Break the <i>explaining away</i> dependency between the latent variables. $$ p(\mathbf{x}|\mathbf{z},\mathbf{u}) \approx \prod\limits_{d,l} \sigma\left[ \lambda x_{d} z_l \tilde{u}_{ld}  \right] $$</li>
-<li>Iterate through all \(z_{nl}\) and \(u_{ld}\) and optimise every single one $$   \sum\limits_d \tilde{x}_{nd} \tilde{u}_{ld} + \sum\limits_{l^{[2]}} z^{[2]}_{nl} \tilde{u}^{[2]}_{ld} > 0 \; \rightarrow z_{nl} = 1,\; \text{else}\; z_{nl}=0 $$ $$  \sum\limits_n \tilde{x}_{nd} z_{nl} > 0 \; \rightarrow u_{ld} = 1,\; \text{else}\; u_{ld}=0 $$</li>
-<li>This will converge very quickly but depend heavily on the intial conditions.</li>
+<li data-fragment-index="1" class="fragment appear">Break the <i>explaining away</i> dependency between the latent variables. $$ p(\mathbf{x}|\mathbf{z},\mathbf{u}) \approx \prod\limits_{d,l} \sigma\left[ \lambda x_{d} z_l \tilde{u}_{ld}  \right] $$</li>
+<li data-fragment-index="2" class="fragment appear">Iterate through all \(z_{nl}\) and \(u_{ld}\) and optimise every single one $$   \sum\limits_d \tilde{x}_{nd} \tilde{u}_{ld} + \sum\limits_{l^{[2]}} z^{[2]}_{nl} \tilde{u}^{[2]}_{ld} > 0 \; \rightarrow z_{nl} = 1,\; \text{else}\; z_{nl}=0 $$ $$  \sum\limits_n \tilde{x}_{nd} z_{nl} > 0 \; \rightarrow u_{ld} = 1,\; \text{else}\; u_{ld}=0 $$</li>
+<li data-fragment-index="3" class="fragment appear">This will converge very quickly but depend heavily on the intial conditions.</li>
+<li data-fragment-index="4" class="fragment appear">More sophisticated variational inference?</li>
 
 </ul>
 </section>
-<section id="slide-sec-8-3">
-<h3 id="sec-8-3">Prior knowledge and classification</h3>
+<section id="slide-sec-3-8-3">
+<h4 id="sec-3-8-3">Prior knowledge and classification</h4>
 <ul>
 <li data-fragment-index="1" class="fragment appear">Prior kowledge can easily be incorporated for features and for the latent representations.
 <ul>
@@ -823,21 +1156,21 @@ color legend
 
 </ul>
 </section>
-<section id="slide-sec-8-4">
-<h3 id="sec-8-4">Further areaos of application</h3>
+<section id="slide-sec-3-8-4">
+<h4 id="sec-3-8-4">Further areas of application</h4>
 <ul>
-<li>Network clustering
+<li data-fragment-index="1" class="fragment appear">Network clustering
 <ul>
 <li>Adjacency matrices as input</li>
 <li>E.g. brain networks from EEG/fMRI for different timepoints or different individuals.</li>
 
 </ul></li>
-<li>Single cell expression data.
+<li data-fragment-index="2" class="fragment appear">Single cell expression data.
 <ul>
 <li>Binarised data for multivariate co-expression analysis.</li>
 
 </ul></li>
-<li>Molecular fingerprints to disocver distinctive properties of compounds for drug discovery.
+<li data-fragment-index="3" class="fragment appear">Molecular fingerprints to disocver distinctive properties of compounds for drug discovery.
 <ul>
 <li>(Planned collaboration with Hannah Patel, Garrett Morris.)</li>
 
@@ -845,13 +1178,11 @@ color legend
 
 </ul>
 </section>
-</section>
-<section>
-<section id="slide-sec-9">
-<h2 id="sec-9">Appendix A: MLE of Lambda</h2>
+<section id="slide-sec-3-9">
+<h3 id="sec-3-9">Appendix A: MLE of Lambda</h3>
 
 <div class="figure">
-<p><img src="file:///home/tammo/hamming_projects/local_figs/blackgull/pancan_lambda.png" alt="pancan_lambda.png" />
+<p><img src="figures/pancan_lambda.png" alt="pancan_lambda.png" />
 </p>
 </div>
 <ul>
@@ -859,45 +1190,43 @@ color legend
 
 </ul>
 </section>
-</section>
-<section>
-<section id="slide-sec-10">
-<h2 id="sec-10">Appendix B: Further example &#x2013; MNIST</h2>
+<section id="slide-sec-3-10">
+<h3 id="sec-3-10">Appendix B: Further example &#x2013; MNIST</h3>
 <ul>
 <li>200 images of the units 2, 7, 9</li>
 <li>Two hidden layers, with 30 and 6 units respectively.</li>
 
 </ul>
 </section>
-<section id="slide-sec-10-1">
-<h3 id="sec-10-1">Sampling</h3>
+<section id="slide-sec-3-10-1">
+<h4 id="sec-3-10-1">Sampling</h4>
 
 <div class="figure">
 <p><img src="figures/mnist_sampler.png" alt="mnist_sampler.png" />
 </p>
 </div>
 </section>
-<section id="slide-sec-10-2">
-<h3 id="sec-10-2">Reconstructions</h3>
+<section id="slide-sec-3-10-2">
+<h4 id="sec-3-10-2">Reconstructions</h4>
 <p>
 From the corresponding representations in layer 1 (left) and layer 2 (right)
 </p>
 
 <p>
-<img src="figures/recon_1.png" alt="recon_1.png" />
+<a href="figures/recon_1.png"><img src="./figures/recon_2.png" alt="recon_2.png" /></a>
 <img src="figures/recon_2.png" alt="recon_2.png" />
 </p>
 </section>
-<section id="slide-sec-10-3">
-<h3 id="sec-10-3">Codes</h3>
+<section id="slide-sec-3-10-3">
+<h4 id="sec-3-10-3">Codes</h4>
 
 <div class="figure">
 <p><img src="figures/snb_small_1.png" alt="snb_small_1.png" />
 </p>
 </div>
 </section>
-<section id="slide-sec-10-4">
-<h3 id="sec-10-4">Codes</h3>
+<section id="slide-sec-3-10-4">
+<h4 id="sec-3-10-4">Codes</h4>
 
 <div class="figure">
 <p><img src="figures/snb_small_2.png" alt="snb_small_2.png" />
