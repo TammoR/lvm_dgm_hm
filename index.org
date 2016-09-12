@@ -217,34 +217,34 @@ file:figures/waves.png
   2) parameters are random variables
 #+END_NOTES
 *** Toy example
-[[file:~/hamming_projects/simulation_studies/toy_tests/train_seed14_method-mmgarch-3/figures/sampler_002.png]]
+[[./figures/sampler_002.png]]
 #+BEGIN_NOTES
 - We do essentially random scan Gibbs sampling, as described later
 #+END_NOTES
 *** Toy example
-[[file:~/hamming_projects/simulation_studies/toy_tests/train_seed14_method-mmgarch-3/figures/animation.gif]]
+[[./figures/animation.gif]]
 ** Synthetic example: Calculator digits
 #+ATTR_HTML: :width 70% :height 50%
-[[file:~/hamming_projects/simulation_studies/figures/calculator/digits.png]]
+[[./figures/digits.png]]
 - Each digit is composed of a subset of 7 distinct bars.
 *** Noiseless calculator digits
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
-[[file:~/hamming_projects/local_figs/nonsparse_noisefree_data.png]]
+[[./figures/nonsparse_noisefree_data.png]]
 compressed data
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
-[[~/hamming_projects/local_figs/nonsparse_noisefreeU0.png]]
+[[./figures/nonsparse_noisefreeU0.png]]
 inferred codes
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
-[[~/hamming_projects/local_figs/codes_recon_new.png]]
+[[./figures/codes_recon_new.png]]
 uncompressed inferred codes
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
-[[~/hamming_projects/local_figs/nonsparse_noisefreeZ0.png]]
+[[./figures/nonsparse_noisefreeZ0.png]]
 inferred latent variables
 #+REVEAL_HTML: </div>
 
@@ -258,17 +258,17 @@ inferred latent variables
 *** Other /perfect/ solutions
 #+REVEAL_HTML: <div class="column" style="float:left; width: 40%">
 #+ATTR_HTML: :width 70% :height 20%
-[[~/hamming_projects/local_figs/calc_simulations/snas714.png]]
+[[./figures/snas714.png]]
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 40%">
 #+ATTR_HTML: :width 70% :height 20%
-[[~/hamming_projects/local_figs/calc_simulations/snas715.png]]
+[[./figures/snas715.png]]
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 8%">
 #+ATTR_HTML: :width 80% :height 20%
-[[file:~/hamming_projects/local_logs/simulation_studies/perfect_digits/cbar.png]]
+[[./figures/cbar.png]]
 #+REVEAL_HTML: </div>
 
 
@@ -287,20 +287,20 @@ inferred latent variables
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
 #+ATTR_HTML: :width 80% :height 20%
-file:~/hamming_projects/server_figs/recon_example32.png
+[[file:figures/recon_example32.png]]
 Denoised digits
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
 #+ATTR_HTML: :width 80% :height 20%
-file:~/hamming_projects/server_figs/recon_example42.png
+[[file:figures/recon_example42.png]]
 Denoised digits
 #+REVEAL_HTML: </div>
 
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 30%">
 #+ATTR_HTML: :width 80% :height 20%
-file:~/hamming_projects/server_figs/recon_example_snas.png
+[[file:figures/recon_example_snas.png]]
 Corresponding codes
 #+REVEAL_HTML: </div>
 
@@ -335,7 +335,6 @@ $$
 - The Gibbs mutation probability is given by $$ p_{\text{mutation}}^{\text{Gibbs}} = p(y'|\text{rest}) $$
 - And therefore the modified sampler has a *higher mutation probability* $$  p_{\text{mutation}}^{\text{modified}} > p_{\text{mutation}}^{\text{Gibbs}} $$
 *** Alternative sampling schemes
-**** Approaches
 #+ATTR_REVEAL: :frag (appear appear appear appear) :frag_idx (1 2 3 4)
 1. Forward-filtering backward-sampling for joint updates across layers
    - Using coniditional independence properties, like for hidden Markov models.
@@ -349,31 +348,31 @@ $$
    - Converge back to equilibrium temperature
 4. Parallel tempering
    - Swapping states between chains is extremely unlikely
-**** Results
+*** Alternative sampling schemes: Results
 #+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
 #+ATTR_HTML: :width 65% :height 20%
-[[~/hamming_projects/improve_inference/shared_logs/comparsion_overall.png]]
+[[./figures/comparsion_overall.png]]
 
 Joint ${p(\mathbf{X},\mathbf{Z}_1,\mathbf{Z}_2|\mathbf{U},\lambda_0)}$
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
 #+ATTR_HTML: :width 65% :height 20%
-[[~/hamming_projects/improve_inference/shared_logs/comparsion_layer1.png]]
+[[./figures/comparsion_layer1.png]]
 
 Data layer ${p(\mathbf{X}|\mathbf{Z}_1,\mathbf{U},\lambda_1)}$
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
 #+ATTR_HTML: :width 65% :height 20%
-[[~/hamming_projects/improve_inference/shared_logs/comparsion_layer2.png]]
+[[./figures/comparsion_layer2.png]]
 
 Data layer ${p(\mathbf{Z}_1|\mathbf{Z}_2,\mathbf{U},\lambda_2)}$
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
 #+ATTR_HTML: :width 65% :height 20%
-[[~/hamming_projects/improve_inference/shared_logs/comparsion_layer3.png]]
+[[./figures/comparsion_layer3.png]]
 
 Data layer ${p(\mathbf{Z}_2|\mathbf{Z}_3,\mathbf{U},\lambda_3)}$
 #+REVEAL_HTML: </div>
@@ -494,7 +493,7 @@ Principal components
 #+REVEAL_HTML: </div>
 *** PCA
 #+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
-[[,/figures/pca_0.png]]
+[[./figures/pca_0.png]]
 First hidden layer (L=15)
 #+REVEAL_HTML: </div>
 #+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
@@ -535,7 +534,7 @@ Second hidden layer (L=4)
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
 #+ATTR_HTML: :width 100% :height 20%
-[[~/hamming_projects/local_figs/gabor/pancan/single_layer3.png]]
+[[./figures/single_layer3.png]]
 #+REVEAL_HTML: </div>
 #+REVEAL_HTML: </div>
 
@@ -557,7 +556,7 @@ compressed data
 #+REVEAL_HTML: </div>
 
 #+REVEAL_HTML: <div class="column" style="float:left; width: 25%">
-[[,/figures/calc_digits_codesviva.png]]
+[[./figures/calc_digits_codesviva.png]]
 inferred codes
 #+REVEAL_HTML: </div>
 
@@ -619,8 +618,9 @@ color legend
   - E.g. brain networks from EEG/fMRI for different timepoints or different individuals.
 - Single cell expression data.
   - Binarised data for multivariate co-expression analysis.
-- Molecular fingerprints to disocver distinctive properties of compounds for drug discovery.
-  - (Planned collaboration with Hannah Patel, Garrett Morris.)
+- Molecular fingerprints 
+# to disocver distinctive properties of compounds for drug discovery.
+#   - (Planned collaboration with Hannah Patel, Garrett Morris.)
 ** Appendix A: MLE of Lambda
 [[file:figures/pancan_lambda.png]]
 - Maximum likelihood estimates for lambda under variation of the layer size in a single-layer HM on TCGA mutation profiles
