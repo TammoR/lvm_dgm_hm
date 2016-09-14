@@ -293,3 +293,13 @@ Archived entries from file /media/tammo/data/ohba_symbolic/presentation/index.or
 # #   - Account for covarites (e.g. by principal componente analysis)
 # #   - Stratified analysis for gender, ethnicity, ...
 
+
+* How does this work?
+:PROPERTIES:
+:ARCHIVE_TIME: 2016-09-13 Tue 12:27
+:ARCHIVE_FILE: ~/Dropbox/DPhil/Roche/presentation/index.org
+:ARCHIVE_OLPATH: Deep neural networks
+:ARCHIVE_CATEGORY: index
+:END:
+#+ATTR_HTML: :width 50%
+[[file:figures/image_recognition_example.png]]

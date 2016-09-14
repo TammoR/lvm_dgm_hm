@@ -35,7 +35,7 @@
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#/slide-sec-1">Latent variable models</a></li>
-<li><a href="#/slide-sec-2">Deep models</a></li>
+<li><a href="#/slide-sec-2">Deep neural networks</a></li>
 <li><a href="#/slide-sec-3">The Hamming Machine</a></li>
 </ul>
 </div>
@@ -49,26 +49,19 @@
 </div></section>
 <section id="slide-sec-1-1">
 <h3 id="sec-1-1">What are latent variables?</h3>
-<div class="column" style="float:left; width: 95%">
+<div class="column" style="float:left; width: 50%">
 <ul>
-<li>Unobserved variables?</li>
-<li>Something like parameters?</li>
-<li>Example: A Gaussian mixture model $$ p(\mathbf{x}_i|\theta) = \prod\limits_{k=1}^{K} \pi_k \mathcal{N}(\mathbf{x}_i|\mu_k,\Sigma_k) $$</li>
+<li data-fragment-index="1" class="fragment appear">Unobserved variables?</li>
+<li data-fragment-index="2" class="fragment appear">Something like parameters?</li>
+<li data-fragment-index="3" class="fragment appear">Example: A Gaussian mixture model $$ p(\mathbf{x}_i|\theta) = \prod\limits_{k=1}^{K} \pi_k \mathcal{N}(\mathbf{x}_i|\mu_k,\Sigma_k) $$
+  <img src="figures/EM_final5.png" alt="EM_final5.png" /></li>
 
 </ul>
 </div>
-
-
-<div class="figure">
-<p><img src="figures/EM_final.png" alt="EM_final.png" width="25%" height="20%" />
-</p>
-</div>
-
-
-<div class="column" style="float:left; width: 95%">
+<div class="column" style="float:left; width: 40%">
 <ul>
-<li>Latent variables:  \(\pi_k\) are local to every data point.</li>
-<li>Parameters \(\mu_k\) and \(\Sigma_k\) act globally.</li>
+<li data-fragment-index="5" class="fragment appear">Latent variables:  \(\pi_k\) are local to every data point.</li>
+<li data-fragment-index="6" class="fragment appear">Parameters \(\mu_k\) and \(\Sigma_k\) act globally.</li>
 
 </ul>
 </div>
@@ -76,28 +69,16 @@
 <section id="slide-sec-1-2">
 <h3 id="sec-1-2">Why use latent variable models?</h3>
 <ul>
-<li>Purpose
-<ul>
-<li>Visualise data</li>
-<li>Compress data</li>
-<li><i>Understand</i> the data generating process</li>
-<li>Classification</li>
-<li>Feature learning</li>
-
-</ul></li>
-<li>Examples
-<ul>
-<li>Mixture models</li>
-<li>Factor analysis (ICA?)</li>
-<li>Unsupervides neural nets</li>
-<li>Deep generative models (VAE)</li>
-
-</ul></li>
+<li data-fragment-index="1" class="fragment appear">Visualise data</li>
+<li data-fragment-index="2" class="fragment appear">Compress data</li>
+<li data-fragment-index="3" class="fragment appear"><i>Understand</i> the data generating process</li>
+<li data-fragment-index="4" class="fragment appear">Classification</li>
+<li data-fragment-index="5" class="fragment appear">Feature learning</li>
 
 </ul>
 <aside class="notes">
 <p>
-Explain difference between supervised and unsupervised learnign
+Explain difference between supervised and unsupervised learning
 </p>
 <ul class="org-ul">
 <li>Two main advantages (Murphy) 
@@ -113,9 +94,33 @@ Explain difference between supervised and unsupervised learnign
 </aside>
 </section>
 <section id="slide-sec-1-3">
-<h3 id="sec-1-3">Directed graphical models</h3>
+<h3 id="sec-1-3">Example of modified factor analysis: ZIFA</h3>
+<div class="column" style="float:left; width: 40%">
+
+<div class="figure">
+<p><img src="figures/latent_zifa.png" alt="latent_zifa.png" width="80%" height="50%" />
+</p>
+</div>
+
+<p>
+single cell RNA seq gene expression data
+</p>
+</div>
+<div class="column" style="float:left; width: 40%">
+
+<div class="figure">
+<p><img src="figures/latent_zifa_l.png" alt="latent_zifa_l.png" class="fragment (apprear) :frag_idx(2)" width="80%" height="50%" />
+</p>
+</div>
+<span class="fragment (apprear) :frag_idx(1)"><p>
+two-dimensional embedding
+</p></span>
+</div>
+</section>
+<section id="slide-sec-1-4">
+<h3 id="sec-1-4">Directed graphical models</h3>
 <ul>
-<li data-fragment-index="1" class="fragment appear">Also knwon as: <i>Bayesian networks</i> or <i>causal networks</i></li>
+<li data-fragment-index="1" class="fragment appear">Also known as: <i>Bayesian networks</i> or <i>causal networks</i></li>
 <li data-fragment-index="2" class="fragment appear">By use of the chain rule of probability any joint probability distribution can be factorised as $$ p(x_{1,\ldots, N}) = p(x_1) p(x_2|x_1) p(x_3|x_2,x_1) \ldots p(x_N|x_{1,\ldots, N-1}) $$</li>
 <li data-fragment-index="3" class="fragment appear">Graphical models represent joint distributions by making conditional independence assumptions.</li>
 
@@ -136,8 +141,8 @@ $$ p(\text{height},\text{age},\text{vocabulary}) = p(\text{height}|\text{age}) p
 </div>
 
 </section>
-<section id="slide-sec-1-4">
-<h3 id="sec-1-4">LVMs as graphical models</h3>
+<section id="slide-sec-1-5">
+<h3 id="sec-1-5">LVMs as graphical models</h3>
 <aside class="notes">
 <ul class="org-ul">
 <li>What is a vector, matrix etc
@@ -185,8 +190,8 @@ $$ p(\text{height},\text{age},\text{vocabulary}) = p(\text{height}|\text{age}) p
 </ul>
 </div>
 </section>
-<section id="slide-sec-1-5">
-<h3 id="sec-1-5">Restrict to a single observation and <i>unroll</i> in L and D</h3>
+<section id="slide-sec-1-6">
+<h3 id="sec-1-6">Restrict to a single observation and <i>unroll</i> in L and D</h3>
 
 <div class="figure">
 <p><img src="figures/toy_net.png" alt="toy_net.png" width="30%" height="50%" />
@@ -197,29 +202,25 @@ $$ p(\text{height},\text{age},\text{vocabulary}) = p(\text{height}|\text{age}) p
 Most <b>neural networks</b> are latent variable models
 </p>
 </section>
-<section id="slide-sec-1-6">
-<h3 id="sec-1-6">Inference in latent variable models</h3>
+<section id="slide-sec-1-7">
+<h3 id="sec-1-7">Inference in latent variable models</h3>
 <ul>
-<li>We want to choose parameters that maximimse the likelihood of the observed data $$ \mathcal{L}(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n |\theta) = \sum\limits_{n=1}^N \log \left[ \sum\limits_{\mathbf{z}_n} p(\mathbf{x}_n, \mathbf{z}_n|\theta) \right] $$</li>
-<li>The marginal is typically hard to compute</li>
-<li>Ansatz: Compute complete data log likelhood $$ \mathcal{L}_c(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n,\mathbf{z}_n|\theta) $$</li>
-<li>But we are not given the complete dataset \(\{\mathbf{X},\mathbf{Z}\}\), only incomplete data \(\mathbf{X}\).</li>
-<li>What <b>do</b> we know about \(\mathbf{Z}\)? The posterior for given parameters: \(p(\mathbf{Z}|\mathbf{X},\theta)\)</li>
+<li class="fragment roll-in">We want to choose parameters that maximise the marginal likelihood of the observed data $$ \mathcal{L}(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n |\theta) = \sum\limits_{n=1}^N \log \left[ \sum\limits_{\mathbf{z}_n} p(\mathbf{x}_n, \mathbf{z}_n|\theta) \right] $$</li>
+<li class="fragment roll-in">The marginal is typically hard to compute</li>
+<li class="fragment roll-in">Ansatz: Compute complete data log likelhood $$ \mathcal{L}_c(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n,\mathbf{z}_n|\theta) $$</li>
+<li class="fragment roll-in">But we are not given the complete dataset \(\{\mathbf{X},\mathbf{Z}\}\), only incomplete data \(\mathbf{X}\).</li>
+<li class="fragment roll-in">What <b>do</b> we know about \(\mathbf{Z}\)? The posterior for given parameters: \(p(\mathbf{Z}|\mathbf{X},\theta)\)</li>
+<li class="fragment roll-in">Therefore use the expeceted complete data log likelihood under the posterior distribution of the latent variables for fixed parameters \(\theta_{\text{old}}\) $$ Q(\theta,\theta_{\text{old}}) = \sum\limits_{\mathbf{Z}} p(\mathbf{Z}|\mathbf{X},\theta_{\text{old}}) \log p(\mathbf{X},\mathbf{Z}|\theta) $$</li>
 
 </ul>
 </section>
-<section id="slide-sec-1-7">
-<h3 id="sec-1-7">Expectation Maximisation for a Gaussian mixture model</h3>
-<ul>
-<li>Therefore use the expeceted complete data log likelihood under the posterior distribution of the latent variables for fixed parameters \(\theta_{\text{old}}\) $$ Q(\theta,\theta_{\text{old}}) = \sum\limits_{\mathbf{Z}} p(\mathbf{Z}|\mathbf{X},\theta_{\text{old}}) \log p(\mathbf{X},\mathbf{Z}|\theta) $$
-
+<section id="slide-sec-1-8">
+<h3 id="sec-1-8">Expectation Maximisation for a Gaussian mixture model</h3>
 <ol>
 <li>E-Step: Use current parameters \(\theta_{\text{old}}\) to calculate the expected complete data log likelihood \(Q\)</li>
-<li>M-Step: Find new parameters that maximise \(Q\): \(\theta_{\text{new}} = \text{arg max} Q(\theta,\theta_{\text{old}}\)</li>
+<li>M-Step: Find new parameters that maximise \(Q\): \(\theta_{\text{new}} = \text{arg max} Q(\theta,\theta_{\text{old}})\)</li>
 
-</ol></li>
-
-</ul>
+</ol>
 
 <div class="figure">
 <p><img src="figures/EM_Clustering_of_Old_Faithful_data.gif" alt="EM_Clustering_of_Old_Faithful_data.gif" width="35%" height="50%" />
@@ -235,6 +236,8 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 </li>
 <li>In general: inference is hard. will only find local modes in most models.
 </li>
+<li>Blank screen in the end -&gt; transition to deep learning
+</li>
 </ul>
 
 </aside>
@@ -243,16 +246,23 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 </section>
 <section>
 <section id="slide-sec-2">
-<h2 id="sec-2">Deep models</h2>
+<h2 id="sec-2">Deep neural networks</h2>
 <div class="outline-text-2" id="text-2">
 </div></section>
 <section id="slide-sec-2-1">
 <h3 id="sec-2-1">Deep Learning History</h3>
+<aside class="notes">
+<ul class="org-ul">
+<li>Connectionism ppl used backprop
+</li>
+</ul>
+
+</aside>
 <ul>
-<li>Deep learning has a long history under many names:
+<li class="fragment roll-in">Deep learning has a long history under many names:
 <ul>
 <li>cybernetics (1940-60)</li>
-<li>connectonism (1980-90)</li>
+<li>connectonism (1980-90) [Hinton, Bengio, LeCun]</li>
 <li>deep learning (since 2006)</li>
 
 </ul></li>
@@ -260,29 +270,47 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 </ul>
 
 <div class="figure">
-<p><img src="figures/waves.png" alt="waves.png" />
+<p><img src="figures/waves.png" alt="waves.png" class="fragment (roll-in) :frag_idx(2)" />
 </p>
 </div>
 <ul>
-<li>Deep learning is extremely successfull in supervised learning tasks like image recognition and natural language processing.</li>
+<li class="fragment roll-in">Why was DL abandoned in the 90s? Why does it work now?</li>
 
 </ul>
 </section>
 <section id="slide-sec-2-2">
 <h3 id="sec-2-2">Feed forward neural networks</h3>
+<aside class="notes">
+<ul class="org-ul">
+<li>A red/blue/green car/truck/bird
+</li>
+</ul>
+
+</aside>
 <ul>
-<li>Many layers of nonlinear functions are stacked and applied sequentially to the data. $$ f<sup>(3)</sup>(f<sup>(2)</sup>)f<sup>({1})</sup>(\mathbf{x})))</li>
-<li>These modles are loosley inspired by neuroscince, where each unit resembles a neuron.</li>
+<li class="fragment roll-in">Many layers of nonlinear functions are stacked and applied sequentially to the data. $$ f^{(3)}(f^{(2)})f^{(1)}(\mathbf{x}))) $$</li>
+<li class="fragment roll-in">These models are loosley inspired by neuroscience: Each unit resembles a neuron.</li>
 
 </ul>
 
 <div class="figure">
-<p><img src="figures/deep_net.png" alt="deep_net.png" />
+<p><img src="figures/deep_net.png" alt="deep_net.png" class="fragment (roll-in) :frag_idx(3)" width="45%" height="50%" />
 </p>
 </div>
+<ul>
+<li class="fragment roll-in">Each neuron receives inputs from the layer below and computes its output with some (nonlinear) activation function.</li>
+
+</ul>
 </section>
 <section id="slide-sec-2-3">
 <h3 id="sec-2-3">Deep Learning: Breakthrough in image classification</h3>
+<aside class="notes">
+<ul class="org-ul">
+<li>Discuss standrad training, i.e. backprop
+</li>
+</ul>
+
+</aside>
 <ul>
 <li>Breakthrough 2012: Reducing classification error on ImageNet by 50% [Krizhevsky, Sutskever, Hinton, 2012]
 <ul>
@@ -296,8 +324,43 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 <p><img src="figures/dnn.png" alt="dnn.png" />
 </p>
 </div>
+</section>
+<section id="slide-sec-2-4">
+<h3 id="sec-2-4">How does this work?</h3>
+
+<div class="figure">
+<p><img src="figures/image_recognition_example.png" alt="image_recognition_example.png" width="50%" />
+</p>
+</div>
 <ul>
-<li>Biomedical applicatoins
+<li>Deep layers learn more and more abstract concepts</li>
+
+</ul>
+</section>
+<section id="slide-sec-2-5">
+<h3 id="sec-2-5">Network size</h3>
+
+<div class="figure">
+<p><img src="figures/network_size.png" alt="network_size.png" />
+</p>
+</div>
+</section>
+<section id="slide-sec-2-6">
+<h3 id="sec-2-6">DL success story</h3>
+<ul>
+<li data-fragment-index="1" class="fragment appear">Deep learning is extremely successfull in supervised learning tasks
+<ul>
+<li>Image recognition</li>
+<li>Natural language processing.</li>
+
+</ul></li>
+<li data-fragment-index="2" class="fragment appear">Reinforcement learning: 
+<ul>
+<li>Atari games</li>
+<li>Alpha Go.</li>
+
+</ul></li>
+<li data-fragment-index="3" class="fragment appear">Some successes in biomedical applications
 <ul>
 <li>Predict tissue-dependent splicing [Leung et al., 2014]</li>
 <li>Learn quantitative structure activity relationships [Ma et al., 2015]</li>
@@ -307,8 +370,8 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 
 </ul>
 </section>
-<section id="slide-sec-2-4">
-<h3 id="sec-2-4">Why does deep learning work?</h3>
+<section id="slide-sec-2-7">
+<h3 id="sec-2-7">Why does deep learning work?</h3>
 <aside class="notes">
 <ul class="org-ul">
 <li>Neural networks are universal approximators.
@@ -319,29 +382,28 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 
 </aside>
 <ul>
-<li>Any smooth function can be approximated by a neural network wiht nonlinear outputs.</li>
-<li>If neurale networks can learn arbirtrary functions, how can they possibly work so well? <i>[Lin and Tegmark, 2016]</i> ?
+<li data-fragment-index="1" class="fragment appear">Any smooth function can be approximated by a neural network with nonlinear outputs.</li>
+<li data-fragment-index="2" class="fragment appear">How can deep neural nets possibly work so well? [Lin and Tegmark, 2016]</li>
+<li>Key aspect of <i>deep learning</i>: Layers of features are not engineered, but learned from the data.</li>
+
+</ul>
 <ol>
-<li>The world is described by symmetric, local low-order polynomials.
+<li data-fragment-index="3" class="fragment appear">The world is described by symmetric, local low-order polynomials.
 <ul>
 <li>Physics: Maxwell, Navier-Stokes, Ising models are described by Hamiltonians of order 2-4</li>
 <li>Statistics: Central limit theorem justifies normal approximation where the Hamiltonian is a 2nd order polynomial</li>
 
 </ul></li>
-<li>The physical world has a hierarchical, Markovian structure.
+<li data-fragment-index="4" class="fragment appear">The physical world has a hierarchical, Markovian structure.
 <ul>
 <li>E.g. images: pixels -&gt; edges at particular orientations -&gt; motifs of edges -&gt; objects</li>
 
 </ul></li>
 
-</ol></li>
-<li>Key aspect of <i>deep learning</i>: Layers of features are not engineered, but learned from the data.</li>
-
-</ul>
-
+</ol>
 </section>
-<section id="slide-sec-2-5">
-<h3 id="sec-2-5">Diffulties in inference of directed neural networks</h3>
+<section id="slide-sec-2-8">
+<h3 id="sec-2-8">Diffulties in inference of directed neural networks</h3>
 <ul>
 <li>Explaining away</li>
 
@@ -352,23 +414,78 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 </p>
 </div>
 <ul>
-<li>Example
-\(x\): Tammo is happy
-\(z_1\): It's sunny outside
-\(z_2\): Paper got accepted</li>
-<li>Given the evidence \(x\), the latent causes \(z_1\) and \(z_2\) are correlated. One is <i>explaining the other away</i>.</li>
+<li data-fragment-index="2" class="fragment appear">Example
+<ul>
+<li>\(x\): Tammo is happy</li>
+<li>\(z_1\): It's sunny outside</li>
+<li>\(z_2\): Paper got accepted</li>
+
+</ul></li>
+<li data-fragment-index="3" class="fragment appear">Given the evidence \(x\), the latent causes \(z_1\) and \(z_2\) are correlated. One is <i>explaining the other away</i>.</li>
 
 </ul>
 </section>
-<section id="slide-sec-2-6">
-<h3 id="sec-2-6">Unsupervised deep learning: Variational autoencoders</h3>
+<section id="slide-sec-2-9">
+<h3 id="sec-2-9">Unsupervised deep learning: Variational autoencoders</h3>
+<ul>
+<li data-fragment-index="1" class="fragment appear">Little progress in unsupervised deep learning.</li>
+<li data-fragment-index="2" class="fragment appear">Seminal paper: Auto-Encoding Variational Bayes [Kingma and Welling, 2014]</li>
+<li data-fragment-index="3" class="fragment appear">Standard varitional approach: Construct a tractable lower bound on the intractable marginal likelihood (evidence). $$ \mathcal{L}_{\text{ELBO}} = \log p(x) - D_{\text{KL}}(q_{\phi}(z|x)||p_{\theta}(z||x)) $$</li>
+<li data-fragment-index="4" class="fragment appear">Rewrite $$ = \log p(x) - E_{z\sim q}\left[\log \frac{q(z|x)}{p(z,x)}p(x) \right] $$</li>
+<li data-fragment-index="5" class="fragment appear">Move evidence into the expectatoin $$ = E_{z\sim q}\left[\log p(z,x) - \log q(z|x)\right] $$</li>
+<li data-fragment-index="6" class="fragment appear">Standard form: $$ = E_{z\sim q} [\log p(z,x)] + H(q) $$</li>
+
+</ul>
+<ul>
+<li data-fragment-index="8" class="fragment appear">Optimise the evidence lower bound (ELBO) with respect to the model parameters, i.e. find the \(q\) that maximises the lower bound and makes it as tight as possible.</li>
+<li data-fragment-index="9" class="fragment appear">Mini batches of data and stochastic gradients (variance problems!)</li>
+
+</ul>
+</section>
+<section id="slide-sec-2-10">
+<h3 id="sec-2-10">Example - MNIST Manifold</h3>
+
+<div class="figure">
+<p><img src="figures/aevb_mnist.png" alt="aevb_mnist.png" width="40%" height="20%" />
+</p>
+</div>
+</section>
+<section id="slide-sec-2-11">
+<h3 id="sec-2-11">Example - Generating digits</h3>
+
+<div class="figure">
+<p><img src="figures/latent_generation.png" alt="latent_generation.png" />
+</p>
+</div>
+</section>
+<section id="slide-sec-2-12">
+<h3 id="sec-2-12">Example - Face Manifold</h3>
+
+<div class="figure">
+<p><img src="figures/face_manifold.png" alt="face_manifold.png" width="35%" height="20%" />
+</p>
+</div>
 </section>
 </section>
 <section>
 <section id="slide-sec-3">
 <h2 id="sec-3">The Hamming Machine</h2>
-<div class="outline-text-2" id="text-3">
-</div></section>
+<ul>
+<li data-fragment-index="1" class="fragment appear">Instead of continuous features, we want to model interactions of cateogrial traits!</li>
+<li data-fragment-index="2" class="fragment appear">We want to learn hierarchical representations in order to understand the data generating process.</li>
+<li data-fragment-index="3" class="fragment appear">We want to learn features that are useful for discriminative analysis.</li>
+
+</ul>
+<aside class="notes">
+<ul class="org-ul">
+<li>Instead of continuous features, we want to model interactions of cateogrial traits!
+</li>
+<li>Even Darwin was wondering (and some other dude)
+</li>
+</ul>
+
+</aside>
+</section>
 <section id="slide-sec-3-1">
 <h3 id="sec-3-1">Introducing the Hamming Machine</h3>
 </section>
@@ -955,7 +1072,7 @@ Principal components
 <h4 id="sec-3-6-6">PCA</h4>
 <div class="column" style="float:left; width: 50%">
 <p>
-<i>,/figures/pca_0.png</i>
+<img src="./figures/pca_0.png" alt="pca_0.png" />
 First hidden layer (L=15)
 </p>
 </div>
@@ -1059,7 +1176,7 @@ compressed data
 
 <div class="column" style="float:left; width: 25%">
 <p>
-<i>,/figures/calc_digits_codesviva.png</i>
+<img src="./figures/calc_digits_codesviva.png" alt="calc_digits_codesviva.png" />
 inferred codes
 </p>
 </div>
@@ -1170,11 +1287,7 @@ color legend
 <li>Binarised data for multivariate co-expression analysis.</li>
 
 </ul></li>
-<li data-fragment-index="3" class="fragment appear">Molecular fingerprints to disocver distinctive properties of compounds for drug discovery.
-<ul>
-<li>(Planned collaboration with Hannah Patel, Garrett Morris.)</li>
-
-</ul></li>
+<li data-fragment-index="3" class="fragment appear">Molecular fingerprints</li>
 
 </ul>
 </section>

@@ -24,45 +24,55 @@
 #+REVEAL_DEFAULT_FRAG_STYLE: roll-in
 #+OPTIONS: org-reveal-center:t
 
-# DO if time: draw graphical model for PCA in tikz
-
 * Latent variable models
 ** What are latent variables?
-#+REVEAL_HTML: <div class="column" style="float:left; width: 95%">
+#+REVEAL_HTML: <div class="column" style="float:left; width: 50%">
+#+ATTR_REVEAL: :frag (appear appear appear appear) :frag_idx (1 2 3 4)
 - Unobserved variables?
 - Something like parameters?
 - Example: A Gaussian mixture model $$ p(\mathbf{x}_i|\theta) = \prod\limits_{k=1}^{K} \pi_k \mathcal{N}(\mathbf{x}_i|\mu_k,\Sigma_k) $$
+  [[file:figures/EM_final5.png]]
 #+REVEAL_HTML: </div>
-
-#+ATTR_HTML: :width 25% :height 20%
-[[file:figures/EM_final.png]]
-
-
-#+REVEAL_HTML: <div class="column" style="float:left; width: 95%">
+#+REVEAL_HTML: <div class="column" style="float:left; width: 40%">
+#+ATTR_REVEAL: :frag (appear appear appear appear appear appear) :frag_idx (5 6)
 - Latent variables:  $\pi_k$ are local to every data point.
 - Parameters $\mu_k$ and $\Sigma_k$ act globally.
 #+REVEAL_HTML: </div>
 ** Why use latent variable models?
-- Purpose
-  - Visualise data
-  - Compress data
-  - /Understand/ the data generating process
-  - Classification
-  - Feature learning
-- Examples
-  - Mixture models
-  - Factor analysis (ICA?)
-  - Unsupervides neural nets
-  - Deep generative models (VAE)
+#+ATTR_REVEAL: :frag (appear appear appear appear appear) :frag_idx (1 2 3 4 5)
+- Visualise data
+- Compress data
+- /Understand/ the data generating process
+- Classification
+- Feature learning
+# - Examples
+#   - Mixture models
+#   - Factor analysis
+#   - Unsupervides neural nets
+#   - Deep generative models (VAE)
 #+BEGIN_NOTES
-Explain difference between supervised and unsupervised learnign
+Explain difference between supervised and unsupervised learning
 - Two main advantages (Murphy) 
   1) fewer parameters
   2) learn representatoin
 #+END_NOTES
+** Example of modified factor analysis: ZIFA
+#+REVEAL_HTML: <div class="column" style="float:left; width: 40%">
+#+ATTR_HTML: :width 80% :height 50%
+[[file:figures/latent_zifa.png]]
+
+single cell RNA seq gene expression data
+#+REVEAL_HTML: </div>
+#+REVEAL_HTML: <div class="column" style="float:left; width: 40%">
+#+ATTR_REVEAL: :frag (apprear) :frag_idx(2)
+#+ATTR_HTML: :width 80% :height 50%
+[[file:figures/latent_zifa_l.png]]
+#+ATTR_REVEAL: :frag (apprear) :frag_idx(1)
+two-dimensional embedding
+#+REVEAL_HTML: </div>
 ** Directed graphical models
 #+ATTR_REVEAL: :frag (appear appear appear) :frag_idx (1 2 3)
-- Also knwon as: /Bayesian networks/ or /causal networks/
+- Also known as: /Bayesian networks/ or /causal networks/
 - By use of the chain rule of probability any joint probability distribution can be factorised as $$ p(x_{1,\ldots, N}) = p(x_1) p(x_2|x_1) p(x_3|x_2,x_1) \ldots p(x_N|x_{1,\ldots, N-1}) $$
 - Graphical models represent joint distributions by making conditional independence assumptions. 
 #+ATTR_REVEAL: :frag (apprear) :frag_idx(4)
@@ -109,16 +119,16 @@ $$ p(\text{height},\text{age},\text{vocabulary}) = p(\text{height}|\text{age}) p
 
 Most *neural networks* are latent variable models
 ** Inference in latent variable models
-- We want to choose parameters that maximimse the likelihood of the observed data $$ \mathcal{L}(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n |\theta) = \sum\limits_{n=1}^N \log \left[ \sum\limits_{\mathbf{z}_n} p(\mathbf{x}_n, \mathbf{z}_n|\theta) \right] $$
+#+ATTR_REVEAL: :frag (roll-in roll-in roll-in roll-in roll-in roll-in roll-in) :frag_idx(1 2 3 4 5 6 7)
+- We want to choose parameters that maximise the marginal likelihood of the observed data $$ \mathcal{L}(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n |\theta) = \sum\limits_{n=1}^N \log \left[ \sum\limits_{\mathbf{z}_n} p(\mathbf{x}_n, \mathbf{z}_n|\theta) \right] $$
 - The marginal is typically hard to compute
 - Ansatz: Compute complete data log likelhood $$ \mathcal{L}_c(\theta) = \sum\limits_{n=1}^N \log p(\mathbf{x}_n,\mathbf{z}_n|\theta) $$
 - But we are not given the complete dataset $\{\mathbf{X},\mathbf{Z}\}$, only incomplete data $\mathbf{X}$.
 - What *do* we know about $\mathbf{Z}$? The posterior for given parameters: $p(\mathbf{Z}|\mathbf{X},\theta)$
-** Expectation Maximisation for a Gaussian mixture model
 - Therefore use the expeceted complete data log likelihood under the posterior distribution of the latent variables for fixed parameters $\theta_{\text{old}}$ $$ Q(\theta,\theta_{\text{old}}) = \sum\limits_{\mathbf{Z}} p(\mathbf{Z}|\mathbf{X},\theta_{\text{old}}) \log p(\mathbf{X},\mathbf{Z}|\theta) $$
-
+** Expectation Maximisation for a Gaussian mixture model
   1. E-Step: Use current parameters $\theta_{\text{old}}$ to calculate the expected complete data log likelihood $Q$
-  2. M-Step: Find new parameters that maximise $Q$: $\theta_{\text{new}} = \text{arg max} Q(\theta,\theta_{\text{old}}$
+  2. M-Step: Find new parameters that maximise $Q$: $\theta_{\text{new}} = \text{arg max} Q(\theta,\theta_{\text{old}})$
 #+ATTR_HTML: :width 35% :height 50%
 [[file:figures/EM_Clustering_of_Old_Faithful_data.gif]]
 
@@ -126,28 +136,60 @@ Example for Gaussian mixture model: Very similar to K-means algorithm
 #+BEGIN_NOTES
 - Discuss identifiability
 - In general: inference is hard. will only find local modes in most models.
+- Blank screen in the end -> transition to deep learning
 #+END_NOTES
 
 # ** Latent variable models for categorical traits
 # - E.g. Genotypes
 
-* Deep models
+* Deep neural networks
 ** Deep Learning History
+#+BEGIN_NOTES
+- Connectionism ppl used backprop
+#+END_NOTES
+#+ATTR_REVEAL: :frag (roll-in) :frag_idx(1)
 - Deep learning has a long history under many names:
   - cybernetics (1940-60)
-  - connectonism (1980-90)
+  - connectonism (1980-90) [Hinton, Bengio, LeCun]
   - deep learning (since 2006)
+#+ATTR_REVEAL: :frag (roll-in) :frag_idx(2)
 file:figures/waves.png
-- Deep learning is extremely successfull in supervised learning tasks like image recognition and natural language processing.
+#+ATTR_REVEAL: :frag (roll-in) :frag_idx(3)
+- Why was DL abandoned in the 90s? Why does it work now?
 ** Feed forward neural networks
-  - Many layers of nonlinear functions are stacked and applied sequentially to the data. $$ f^{(3)}(f^{(2)})f^({1})(\mathbf{x})))
-  - These modles are loosley inspired by neuroscince, where each unit resembles a neuron.
+#+BEGIN_NOTES
+- A red/blue/green car/truck/bird
+#+END_NOTES
+#+ATTR_REVEAL: :frag (roll-in roll-in) :frag_idx(1 2)
+  - Many layers of nonlinear functions are stacked and applied sequentially to the data. $$ f^{(3)}(f^{(2)})f^{(1)}(\mathbf{x}))) $$
+  - These models are loosley inspired by neuroscience: Each unit resembles a neuron.
+  #+ATTR_REVEAL: :frag (roll-in) :frag_idx(3)
+  #+ATTR_HTML: :width 45% :height 50%
   [[file:figures/deep_net.png]]
+#+ATTR_REVEAL: :frag (roll-in roll-in) :frag_idx(4)
+- Each neuron receives inputs from the layer below and computes its output with some (nonlinear) activation function.
 ** Deep Learning: Breakthrough in image classification
+#+BEGIN_NOTES
+- Discuss standrad training, i.e. backprop
+#+END_NOTES
 - Breakthrough 2012: Reducing classification error on ImageNet by 50% [Krizhevsky, Sutskever, Hinton, 2012]
   - 15 million labeled high-resolution images with ~22k categories
 [[file:figures/dnn.png]]
-- Biomedical applicatoins
+** How does this work?
+#+ATTR_HTML: :width 50%
+[[file:figures/image_recognition_example.png]]
+- Deep layers learn more and more abstract concepts
+** Network size
+[[file:figures/network_size.png]]
+** DL success story
+#+ATTR_REVEAL: :frag (appear appear appear) :frag_idx (1 2 3)
+- Deep learning is extremely successfull in supervised learning tasks
+  - Image recognition
+  - Natural language processing.
+- Reinforcement learning: 
+  - Atari games
+  - Alpha Go.
+- Some successes in biomedical applications
   - Predict tissue-dependent splicing [Leung et al., 2014]
   - Learn quantitative structure activity relationships [Ma et al., 2015]
   - Predict binding sites for regulatory Genomics (DeepBind) [Park et al., 2015]
@@ -158,26 +200,54 @@ file:figures/waves.png
 - Neural networks are universal approximators.
 - There exit 2**2**n boolen functions of n variables. For only 260 data points a neural network that implements a generic function in this class requires more bits than particles in the universe.
 #+END_NOTES
-- Any smooth function can be approximated by a neural network wiht nonlinear outputs.
-- If neurale networks can learn arbirtrary functions, how can they possibly work so well? /[Lin and Tegmark, 2016]/ ?
+#+ATTR_REVEAL: :frag (appear appear appear) :frag_idx (1 2 3)
+- Any smooth function can be approximated by a neural network with nonlinear outputs.
+- How can deep neural nets possibly work so well? [Lin and Tegmark, 2016]
+- Key aspect of /deep learning/: Layers of features are not engineered, but learned from the data.
+#+ATTR_REVEAL: :frag (appear appear appear) :frag_idx (4 5 6)
   1) The world is described by symmetric, local low-order polynomials.
      - Physics: Maxwell, Navier-Stokes, Ising models are described by Hamiltonians of order 2-4
      - Statistics: Central limit theorem justifies normal approximation where the Hamiltonian is a 2nd order polynomial
   2) The physical world has a hierarchical, Markovian structure.
      - E.g. images: pixels -> edges at particular orientations -> motifs of edges -> objects
-- Key aspect of /deep learning/: Layers of features are not engineered, but learned from the data.
-  
 ** Diffulties in inference of directed neural networks
 - Explaining away
 [[file:figures/explaining_away.png]]
+#+ATTR_REVEAL: :frag (appear appear) :frag_idx (2 3)
 - Example
-  $x$: Tammo is happy
-  $z_1$: It's sunny outside
-  $z_2$: Paper got accepted
+  - $x$: Tammo is happy
+  - $z_1$: It's sunny outside
+  - $z_2$: Paper got accepted
 - Given the evidence $x$, the latent causes $z_1$ and $z_2$ are correlated. One is /explaining the other away/.
 ** Unsupervised deep learning: Variational autoencoders
+#+ATTR_REVEAL: :frag (appear appear appear appear appear appear) :frag_idx (1 2 3 4 5 6 7 8)
++ Little progress in unsupervised deep learning.
++ Seminal paper: Auto-Encoding Variational Bayes [Kingma and Welling, 2014]
++ Standard varitional approach: Construct a tractable lower bound on the intractable marginal likelihood (evidence). $$ \mathcal{L}_{\text{ELBO}} = \log p(x) - D_{\text{KL}}(q_{\phi}(z|x)||p_{\theta}(z||x)) $$
++ Rewrite $$ = \log p(x) - E_{z\sim q}\left[\log \frac{q(z|x)}{p(z,x)}p(x) \right] $$ 
++ Move evidence into the expectatoin $$ = E_{z\sim q}\left[\log p(z,x) - \log q(z|x)\right] $$ 
++ Standard form: $$ = E_{z\sim q} [\log p(z,x)] + H(q) $$
+#+ATTR_REVEAL: :frag (appear appear) :frag_idx (8 9)
++ Optimise the evidence lower bound (ELBO) with respect to the model parameters, i.e. find the $q$ that maximises the lower bound and makes it as tight as possible.
++ Mini batches of data and stochastic gradients (variance problems!)
+** Example - MNIST Manifold
+#+ATTR_HTML: :width 40% :height 20%
+[[file:figures/aevb_mnist.png]]
 # as an example of state of the art unsupervised learning (read paper and tutorial paper)
+** Example - Generating digits
+[[file:figures/latent_generation.png]]
+** Example - Face Manifold
+#+ATTR_HTML: :width 35% :height 20%
+[[file:figures/face_manifold.png]]
 * The Hamming Machine
+#+ATTR_REVEAL: :frag (appear appear appear) :frag_idx (1 2 3)
+- Instead of continuous features, we want to model interactions of cateogrial traits!
+- We want to learn hierarchical representations in order to understand the data generating process.
+- We want to learn features that are useful for discriminative analysis.
+#+BEGIN_NOTES
+- Instead of continuous features, we want to model interactions of cateogrial traits!
+- Even Darwin was wondering (and some other dude)
+#+END_NOTES
 ** Introducing the Hamming Machine
 # ** Motivation
 # - A latent variable model for categorical traits to learn features and representations that
